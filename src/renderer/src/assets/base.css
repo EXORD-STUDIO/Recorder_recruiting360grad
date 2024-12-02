@@ -1,67 +1,61 @@
-:root {
-  --ev-c-white: #ffffff;
-  --ev-c-white-soft: #f8f8f8;
-  --ev-c-white-mute: #f2f2f2;
-
-  --ev-c-black: #1b1b1f;
-  --ev-c-black-soft: #222222;
-  --ev-c-black-mute: #282828;
-
-  --ev-c-gray-1: #515c67;
-  --ev-c-gray-2: #414853;
-  --ev-c-gray-3: #32363f;
-
-  --ev-c-text-1: rgba(255, 255, 245, 0.86);
-  --ev-c-text-2: rgba(235, 235, 245, 0.6);
-  --ev-c-text-3: rgba(235, 235, 245, 0.38);
-
-  --ev-button-alt-border: transparent;
-  --ev-button-alt-text: var(--ev-c-text-1);
-  --ev-button-alt-bg: var(--ev-c-gray-3);
-  --ev-button-alt-hover-border: transparent;
-  --ev-button-alt-hover-text: var(--ev-c-text-1);
-  --ev-button-alt-hover-bg: var(--ev-c-gray-2);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --color-background: var(--ev-c-black);
-  --color-background-soft: var(--ev-c-black-soft);
-  --color-background-mute: var(--ev-c-black-mute);
-
-  --color-text: var(--ev-c-text-1);
+  color: theme('colors.gray.700');
+  --color-brand: #1e90ff;
+  /* DEFAULT BRAND COLOR */
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
+::selection {
+  background-color: theme('colors.brand.100');
 }
 
-ul {
-  list-style: none;
+.transition-package {
+  @apply transition-all duration-300 ease-in-out;
 }
 
-body {
-  min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.btn {
+  @apply flex justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply bg-brand-600 text-white hover:bg-brand-500 focus-visible:outline-brand-600 disabled:focus:outline-brand-600 disabled:hover:bg-brand-600;
+}
+
+.btn-secondary {
+  @apply bg-gray-300 text-gray-800 hover:bg-gray-200 focus-visible:outline-gray-600 disabled:focus:outline-gray-600 disabled:hover:bg-gray-300;
+}
+
+.btn-danger {
+  @apply bg-red-600 enabled:hover:bg-red-500 enabled:focus-visible:outline-red-600;
+}
+
+.btn-warning {
+  @apply bg-yellow-600 hover:bg-yellow-500 focus-visible:outline-yellow-600 disabled:focus:outline-yellow-600 disabled:hover:bg-yellow-600;
+}
+
+.btn-sm {
+  @apply px-2 py-1.5 text-xs;
+}
+
+.mini-btn {
+  @apply text-xs p-1 -m-1 hover:text-brand-600 focus:text-brand-600 active:bg-gray-100 rounded-lg;
+}
+
+.round-btn {
+  @apply p-2 rounded-full aspect-square;
+}
+
+.input {
+  @apply rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6;
+}
+
+.checkbox {
+  @apply size-6 rounded border-gray-300 text-brand-600 focus:ring-brand-600;
+}
+
+.checkbox-sm {
+  @apply size-5;
 }
