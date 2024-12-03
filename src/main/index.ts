@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain, desktopCapturer, session } from 'electron'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import fs from 'fs'
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,8 +50,33 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
+    desktopCapturer.getSources({ types: ['screen'] }).then((sources) => {
+      // Grant access to capture desktop and microphone audio
+      callback({ enableLocalEcho: true, audio: 'loopback', video: sources[0] })
+    })
+  })
+
+  ipcMain.on('start-recording', (_, id) => {
+    console.log('start-recording')
+    // Start a new write stream
+    const file = join(app.getPath('desktop'), 'audio.mp3')
+    const writeStream = fs.createWriteStream(file, { encoding: 'binary' })
+    writeStreams[id] = writeStream
+  })
+
+  ipcMain.on('stop-recording', (_, id) => {
+    console.log('stop-recording')
+    // Stop the write stream
+    writeStreams[id]?.end()
+  })
+
+  ipcMain.on('write-audio', (_, id, arrayBuffer) => {
+    console.log('write-audio')
+    // Write to the write stream
+    const buffer = Buffer.from(arrayBuffer, 'binary')
+    writeStreams[id]?.write(buffer)
+  })
 
   createWindow()
 
