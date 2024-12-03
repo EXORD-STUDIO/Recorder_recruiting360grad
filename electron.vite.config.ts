@@ -9,6 +9,12 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
-    plugins: [svelte()]
+    plugins: [svelte()],
+    server: {
+      headers: {
+        'Content-Security-Policy':
+          "default-src 'self'; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; connect-src *;"
+      }
+    }
   }
 })
