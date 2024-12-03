@@ -18,6 +18,12 @@ module.exports = {
     }
   ],
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto'
+      }
+    ],
     'svelte/no-unused-svelte-ignore': 'off'
   }
 }
