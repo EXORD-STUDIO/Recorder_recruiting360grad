@@ -1,13 +1,6 @@
 <script>
-  import { onMount } from 'svelte'
-  import { loadUser, user } from '../stores/user.store'
+  import { user } from '../stores/user.store'
   import Avatar from '../components/Avatar.svelte'
-
-  onMount(async () => {
-    if (!$user) {
-      loadUser()
-    }
-  })
 </script>
 
 <div class="w-screen h-screen overflow-hidden flex flex-col">
