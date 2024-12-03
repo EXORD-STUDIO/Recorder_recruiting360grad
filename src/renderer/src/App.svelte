@@ -1,18 +1,51 @@
-<script>
-  import { Router, Link, Route } from 'svelte-routing'
+<script lang="ts">
+  import { Router, Route } from 'svelte-routing'
+  import Home from './pages/Home.svelte'
+  import Login from './pages/Login.svelte'
+  import { initAuth } from './auth/pocketbase'
+  import { onMount } from 'svelte'
+  import { navigateTo } from './utils/navigate'
+  import SetToken from './pages/SetToken.svelte'
+  import Loading from './pages/Loading.svelte'
 
   export let url = ''
+  export let loading = false
+
+  window.electron.ipcRenderer.on('deeplink', (_, deeplink: string) => {
+    const indexof = deeplink.indexOf('://')
+    const url = decodeURI(deeplink.slice(indexof + 3))
+    console.log('Deeplink:', url)
+    navigateTo(url)
+  })
+
+  onMount(async () => {
+    loading = true
+    console.log('URL:', url)
+    if (!url.startsWith('/login')) {
+      try {
+        await initAuth()
+      } catch (error) {
+        console.log('Auth fehlgeschlagen. Redirect to login page')
+        // Redirect to login page
+        navigateTo('/login/')
+      }
+    }
+    loading = false
+  })
 </script>
 
-<Router {url}>
-  <nav>
-    <Link to="/">Home</Link>
-    <Link to="/about">About</Link>
-    <Link to="/blog">Blog</Link>
-  </nav>
-  <div>
-    <Route path="/blog">Blog</Route>
-    <Route path="/about">About</Route>
-    <Route path="/">Huhu</Route>
-  </div>
+<Router bind:url>
+  {#if loading}
+    <Loading />
+  {:else}
+    <div class="w-screen h-screen">
+      <Route path="/" component={Home} />
+      <Route path="/login">
+        <Login />
+      </Route>
+      <Route path="/login/set-token/:url/:token" let:params>
+        <SetToken url={params.url} token={params.token} />
+      </Route>
+    </div>
+  {/if}
 </Router>
