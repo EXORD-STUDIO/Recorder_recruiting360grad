@@ -4,6 +4,36 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import fs from 'fs'
 
+const writeStreams: { [key: string]: fs.WriteStream } = {}
+let mainWindow: BrowserWindow | null
+
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('recorder', process.execPath, [path.resolve(process.argv[1])])
+  }
+
+  console.log('Running as default app')
+} else {
+  app.setAsDefaultProtocolClient('recorder')
+  console.log('Running as application')
+}
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (_, commandLine) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+
+    mainWindow?.webContents.send('deeplink', commandLine.pop()?.slice(0))
+  })
+}
+
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -19,7 +49,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
