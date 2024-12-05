@@ -47,7 +47,7 @@
           startRecording({
             desktopId: '',
             micId: '',
-            user: null
+            contact: null
           })}>Start Recording</button
       >
       <button
