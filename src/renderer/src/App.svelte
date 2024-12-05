@@ -12,7 +12,7 @@
   export let loading = false
 
   const basepath = /^\/?[a-zA-Z]+:/.test(window.location.pathname)
-    ? window.location.pathname.substr(0, window.location.pathname.indexOf(':') + 1)
+    ? window.location.pathname.substring(0, window.location.pathname.indexOf(':') + 1)
     : '/'
 
   window.electron.ipcRenderer.on('deeplink', (_, deeplink: string) => {
