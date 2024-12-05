@@ -1,7 +1,8 @@
 appId: com.electron.app
-productName: recorder-recruiting360grad
+productName: Phone Recorder 360°
 directories:
   buildResources: build
+  output: "dist/${version}"
 files:
   - '!**/.vscode/*'
   - '!src/*'
