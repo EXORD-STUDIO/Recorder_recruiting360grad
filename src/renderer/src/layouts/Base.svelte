@@ -1,6 +1,24 @@
-<script>
+<script lang="ts">
   import { user } from '../stores/user.store'
   import Avatar from '../components/Avatar.svelte'
+  import { currentRecording, stopRecording } from '../stores/recorder.store'
+  import { navigateTo } from '../utils/navigate'
+  import { bytesToMegaBytesString, getContactName, lengthToString } from '../utils/formatters'
+
+  export let currentlyActive: 'recordings' | 'start'
+
+  const pages = [
+    {
+      name: 'Start',
+      id: 'start',
+      func: () => navigateTo('/')
+    },
+    {
+      name: 'Alle Aufnahmen',
+      id: 'recordings',
+      func: () => navigateTo('/recordings')
+    }
+  ]
 </script>
 
 <div class="w-screen h-screen overflow-hidden flex flex-col">
@@ -34,7 +52,49 @@
       </svg>
     </button>
   </div>
-  <div class="overflow-y-auto overflow-x-hidden p-5 h-full">
+  {#if $currentRecording}
+    <div
+      class="w-full bg-brand-50 flex gap-2 items-center justify-between px-3 py-2 border-t relative"
+    >
+      <!-- <div class="absolute left-0 h-2 bg-green-400">
+        <AudioVisualisation audioAnalyser={$currentRecording.audioContext.createAnalyser()} />
+      </div> -->
+      <div>
+        <h1 class="text font-semibold">
+          {$currentRecording?.settings?.contact
+            ? getContactName($currentRecording.settings.contact)
+            : 'Unbekannt'}
+        </h1>
+        <p class="text-sm text-gray-500 -mt-1">
+          {lengthToString($currentRecording?.length || 0)} |
+          {bytesToMegaBytesString($currentRecording?.size || 0)}
+        </p>
+      </div>
+      <div>
+        <button
+          on:click={() => stopRecording($currentRecording)}
+          title="Aufnahme beenden"
+          class="rounded-full h-8 w-8 bg-red-400 flex items-center justify-center"
+        >
+          <div class="w-3 h-3 rounded-sm bg-white"></div>
+        </button>
+      </div>
+    </div>
+  {/if}
+  <div class="w-full flex bg-brand-50">
+    {#each pages as page}
+      <button
+        class="w-1/2 py-2 text-center border-b-2"
+        class:font-semibold={currentlyActive === page.id}
+        class:text-brand={currentlyActive === page.id}
+        class:border-brand={currentlyActive === page.id}
+        on:click={() => page.func()}
+      >
+        {page.name}
+      </button>
+    {/each}
+  </div>
+  <div class="overflow-y-auto overflow-x-hidden h-full">
     <slot></slot>
   </div>
 </div>

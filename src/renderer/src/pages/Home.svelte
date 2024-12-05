@@ -25,7 +25,7 @@
   })
 </script>
 
-<Base>
+<Base currentlyActive="start">
   <div class="h-full">
     <h1>Home</h1>
     <p>Welcome to the home page.</p>
