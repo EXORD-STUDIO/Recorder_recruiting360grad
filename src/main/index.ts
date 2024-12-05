@@ -32,6 +32,10 @@ if (!gotTheLock) {
 
     mainWindow?.webContents.send('deeplink', commandLine.pop()?.slice(0))
   })
+
+  app.on('open-url', (_, url) => {
+    mainWindow?.webContents.send('deeplink', url)
+  })
 }
 
 function createWindow(): void {
@@ -80,8 +84,9 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
-    desktopCapturer.getSources({ types: ['screen'] }).then((sources) => {
+  session.defaultSession.setDisplayMediaRequestHandler((_, callback) => {
+    desktopCapturer.getSources({ types: ['screen', 'window'] }).then((sources) => {
+      console.log(sources)
       // Grant access to capture desktop and microphone audio
       callback({ enableLocalEcho: true, audio: 'loopback', video: sources[0] })
     })
@@ -109,6 +114,8 @@ app.whenReady().then(() => {
   })
 
   createWindow()
+
+  mainWindow?.webContents.openDevTools()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

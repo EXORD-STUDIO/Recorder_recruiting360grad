@@ -1,73 +1,67 @@
 <script lang="ts">
-  //   window.electron.ipcRenderer.on('sources', async (event, sources) => {
-  //     const source = sources[0]
-
+  import { onMount } from 'svelte'
+  import InputSelect from '../components/input/InputSelect.svelte'
   import Base from '../layouts/Base.svelte'
+  import { currentRecording, startRecording, stopRecording } from '../stores/recorder.store'
 
-  //   })
-  let size = 0
-  let mediaRecorder: MediaRecorder
+  let micId = 'default'
+  let possibleMics = []
 
-  async function startRecording(): Promise<void> {
-    console.log('Start recording')
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      console.log('Devices:', devices)
+  async function getMics(): Promise<void> {
+    possibleMics = await navigator.mediaDevices.enumerateDevices().then((devices) => {
+      console.log(devices)
+      return devices
+        .filter((device) => device.kind === 'audioinput')
+        .map((device) => {
+          return {
+            id: device.deviceId,
+            name: device.label
+          }
+        })
     })
-    const audioContext = new AudioContext()
-
-    // Add audio mic track
-    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    const audioIn = audioContext.createMediaStreamSource(audioStream)
-
-    // Add desktop audio track
-    const desktopStream = await navigator.mediaDevices.getDisplayMedia({ audio: true })
-    const desktopIn = audioContext.createMediaStreamSource(desktopStream)
-
-    const dest = audioContext.createMediaStreamDestination()
-
-    audioIn.connect(dest)
-    desktopIn.connect(dest)
-
-    handleStream(dest.stream)
   }
-
-  function handleStream(stream: MediaStream): void {
-    const ID = Math.random().toString(36).substring(7)
-
-    mediaRecorder = new MediaRecorder(stream)
-    size = 0
-
-    window.electron.ipcRenderer.send('start-recording', ID)
-
-    mediaRecorder.addEventListener('dataavailable', async (event) => {
-      size += event.data.size
-      const arrayBuffer = await event.data.arrayBuffer()
-      window.electron.ipcRenderer.send('write-audio', ID, arrayBuffer)
-
-      if (mediaRecorder.state === 'inactive') {
-        window.electron.ipcRenderer.send('stop-recording', ID)
-        mediaRecorder = null
-      }
-    })
-
-    mediaRecorder.start(1000)
-  }
-
-  function stopRecording(): void {
-    if (!mediaRecorder) return
-    mediaRecorder.stop()
-  }
+  onMount(() => {
+    getMics()
+  })
 </script>
 
 <Base>
-  <div>
+  <div class="h-full">
     <h1>Home</h1>
     <p>Welcome to the home page.</p>
-    <div class="pt-10">Recording is {mediaRecorder ? 'running' : 'not running'}</div>
-    <div class="flex p-4 gap-2">
-      <button class="btn btn-primary" on:click={startRecording}>Start Recording</button>
-      <button class="btn btn-primary" on:click={stopRecording}>Stop Recording</button>
+    <div class="pt-10">Recording is {$currentRecording ? 'running' : 'not running'}</div>
+    <div>
+      <InputSelect
+        bind:value={micId}
+        options={possibleMics}
+        placeholder="Select a microphone"
+        onSelect={(value) => {
+          micId = value
+        }}
+      />
     </div>
-    <p>Size: {size}</p>
+    <div class="flex p-4 gap-2">
+      <button
+        class="btn btn-primary"
+        on:click={() =>
+          startRecording({
+            desktopId: '',
+            micId: '',
+            user: null
+          })}>Start Recording</button
+      >
+      <button
+        class="btn btn-primary"
+        on:click={() => {
+          stopRecording($currentRecording)
+        }}>Stop Recording</button
+      >
+    </div>
+    {#if $currentRecording}
+      <div class="p-4">
+        <p>Size: {$currentRecording.size}</p>
+        <p>Länge: {$currentRecording.length}</p>
+      </div>
+    {/if}
   </div>
 </Base>

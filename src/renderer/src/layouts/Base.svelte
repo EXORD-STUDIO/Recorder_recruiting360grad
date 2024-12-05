@@ -34,7 +34,7 @@
       </svg>
     </button>
   </div>
-  <div class="overflow-y-auto overflow-x-hidden p-5">
+  <div class="overflow-y-auto overflow-x-hidden p-5 h-full">
     <slot></slot>
   </div>
 </div>
