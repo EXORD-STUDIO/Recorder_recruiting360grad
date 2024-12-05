@@ -11,6 +11,10 @@
   export let url = ''
   export let loading = false
 
+  const basepath = /^\/?[a-zA-Z]+:/.test(window.location.pathname)
+    ? window.location.pathname.substr(0, window.location.pathname.indexOf(':') + 1)
+    : '/'
+
   window.electron.ipcRenderer.on('deeplink', (_, deeplink: string) => {
     const indexof = deeplink.indexOf('://')
     const url = decodeURI(deeplink.slice(indexof + 3))
@@ -34,7 +38,7 @@
   })
 </script>
 
-<Router bind:url>
+<Router bind:url {basepath}>
   {#if loading}
     <Loading />
   {:else}
