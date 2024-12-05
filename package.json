@@ -26,6 +26,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "electron-updater": "^6.1.7",
     "pocketbase": "^0.22.1",
+    "svelte-headlessui": "^0.0.45",
     "svelte-routing": "^2.13.0"
   },
   "devDependencies": {
