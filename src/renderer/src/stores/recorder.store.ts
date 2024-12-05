@@ -1,6 +1,7 @@
 import { writable, type Writable } from 'svelte/store'
 import type { CurrentRecording } from '../types/recording/currentRecording'
 import type { RecordingSettings } from '../types/recording/recordingSettings'
+import { addRecording } from '../utils/indexDb'
 
 export const currentRecording: Writable<CurrentRecording | null> = writable(null)
 
@@ -66,4 +67,13 @@ export async function startRecording(settings: RecordingSettings): Promise<void>
 export function stopRecording(currentRecording: CurrentRecording): void {
   if (!currentRecording.mediaRecorder) return
   currentRecording.mediaRecorder.stop()
+  addRecording({
+    id: currentRecording.id,
+    size: currentRecording.size,
+    length: currentRecording.length,
+    contact: currentRecording.settings.contact,
+    createdAt: Date.now(),
+    fileURI: currentRecording.fileUrl,
+    uploaded: false
+  })
 }
