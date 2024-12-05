@@ -7,6 +7,7 @@
   import { navigateTo } from './utils/navigate'
   import SetToken from './pages/SetToken.svelte'
   import Loading from './pages/Loading.svelte'
+  import Recordings from './pages/Recordings.svelte'
 
   export let url = ''
   export let loading = false
@@ -44,6 +45,7 @@
   {:else}
     <div class="w-screen h-screen">
       <Route path="/" component={Home} />
+      <Route path="/recordings" component={Recordings} />
       <Route path="/login">
         <Login />
       </Route>
