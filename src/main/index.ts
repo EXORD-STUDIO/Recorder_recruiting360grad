@@ -92,10 +92,19 @@ app.whenReady().then(() => {
     })
   })
 
+  ipcMain.handle('recording:start', (_, id) => {
+    console.log('start-recording')
+    // Start a new write stream
+    const file = join(app.getPath('appData'), 'recorder-recruiting360grad', `${Date.now()}.mp3`)
+    const writeStream = fs.createWriteStream(file, { encoding: 'binary' })
+    writeStreams[id] = writeStream
+    return file
+  })
+
   ipcMain.on('start-recording', (_, id) => {
     console.log('start-recording')
     // Start a new write stream
-    const file = join(app.getPath('desktop'), 'audio.mp3')
+    const file = join(app.getPath('appData'), `${id}.mp3`)
     const writeStream = fs.createWriteStream(file, { encoding: 'binary' })
     writeStreams[id] = writeStream
   })

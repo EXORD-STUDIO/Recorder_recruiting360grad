@@ -31,7 +31,7 @@ export async function startRecording(settings: RecordingSettings): Promise<void>
   const id = Math.random().toString(36).substring(7)
   const mediaRecorder = new MediaRecorder(dest.stream)
 
-  window.electron.ipcRenderer.send('start-recording', id)
+  const fileUrl = await window.api.startRecording(id)
 
   mediaRecorder.addEventListener('dataavailable', async (event) => {
     if (!currentRecording) return
