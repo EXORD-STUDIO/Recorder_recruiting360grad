@@ -41,5 +41,5 @@ export function bytesToMegaBytesString(bytes: number): string {
  */
 export function timeStampToString(timeStamps: number): string {
   const date = new Date(timeStamps)
-  return date.toLocaleString()
+  return date.toLocaleTimeString()
 }
