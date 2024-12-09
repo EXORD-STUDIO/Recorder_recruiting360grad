@@ -41,8 +41,8 @@ if (!gotTheLock) {
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 350,
-    height: 500,
+    width: 420,
+    height: 580,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -91,6 +91,11 @@ app.whenReady().then(() => {
       // Grant access to capture desktop and microphone audio
       callback({ enableLocalEcho: true, audio: 'loopback', video: sources[0] })
     })
+  })
+
+  ipcMain.handle('read-file', async (_, uri) => {
+    const blob = await fs.openAsBlob(uri)
+    return await blob.arrayBuffer()
   })
 
   ipcMain.handle('recording:start', (_, id) => {

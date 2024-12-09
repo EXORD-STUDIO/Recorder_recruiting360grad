@@ -3,7 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  startRecording: (id: string) => ipcRenderer.invoke('recording:start', id)
+  startRecording: (id: string) => ipcRenderer.invoke('recording:start', id),
+  readFile: (uri: string) => ipcRenderer.invoke('read-file', uri)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

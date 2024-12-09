@@ -5,6 +5,7 @@ declare global {
     electron: ElectronAPI
     api: {
       startRecording: (id: string) => Promise<string>
+      readFile: (uri: string) => Promise<ArrayBuffer>
     }
   }
 }
