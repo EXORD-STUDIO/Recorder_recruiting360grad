@@ -2,6 +2,8 @@
   import { createListbox } from 'svelte-headlessui'
   import type { SelectItem } from '../../types/components/SelectItem'
 
+  export let label = ''
+  export let name = ''
   export let value: string | null = null
   export let options: SelectItem[] = []
   export let placeholder: string = 'Select an item'
@@ -26,7 +28,11 @@
 </script>
 
 <div class="w-full relative">
+  {#if label}
+    <label for={name} class="block text-sm font-medium leading-6 text-gray-900 mb-2">{label}</label>
+  {/if}
   <button
+    {name}
     use:listbox.button
     on:change={onChange}
     class="input relative flex items-center gap-2 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-brand-600 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-600 disabled:opacity-50 disabled:cursor-not-allowed"
