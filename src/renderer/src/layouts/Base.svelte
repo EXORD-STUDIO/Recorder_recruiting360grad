@@ -4,6 +4,8 @@
   import { currentRecording, stopRecording } from '../stores/recorder.store'
   import { navigateTo } from '../utils/navigate'
   import { bytesToMegaBytesString, getContactName, lengthToString } from '../utils/formatters'
+  import { dialogs } from '../components/dialogs/dialogs.store'
+  import Dialogs from '../components/dialogs/Dialogs.svelte'
 
   export let currentlyActive: 'recordings' | 'start'
 
@@ -20,6 +22,8 @@
     }
   ]
 </script>
+
+<Dialogs />
 
 <div class="w-screen h-screen overflow-hidden flex flex-col">
   <div class="bg-brand-50 w-full flex gap-2 items-center justify-between px-3 py-2">
