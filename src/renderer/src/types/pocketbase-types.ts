@@ -264,10 +264,10 @@ export type HistoryItemsRecord = {
 	attachment_url?: string
 	contact?: RecordIdString
 	created?: IsoDateString
+	created_by?: RecordIdString
 	deleted_at?: IsoDateString
 	description?: string
 	id: string
-	responsible?: RecordIdString
 	team?: RecordIdString
 	third_party_id?: string
 	title?: string
@@ -560,17 +560,26 @@ export type TeamsRecord = {
 export type UsersRecord = {
 	avatar?: string
 	city?: string
+	communication_free_text?: string
 	company?: string
 	country?: string
 	created?: IsoDateString
 	email: string
 	emailVisibility?: boolean
 	email_signature?: string
+	greeting_company?: string
+	greeting_formal_female?: string
+	greeting_formal_neutral?: string
+	greeting_formale_male?: string
+	greeting_informal_female?: string
+	greeting_informal_male?: string
+	greeting_informal_neutral?: string
 	handwritten_signature?: string
 	id: string
 	invite?: RecordIdString
 	job?: string
 	last_login?: IsoDateString
+	last_viewed_contact?: RecordIdString
 	lat?: number
 	lng?: number
 	mobile?: string
