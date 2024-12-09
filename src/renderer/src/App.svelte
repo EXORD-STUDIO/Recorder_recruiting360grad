@@ -8,6 +8,9 @@
   import SetToken from './pages/SetToken.svelte'
   import Loading from './pages/Loading.svelte'
   import Recordings from './pages/Recordings.svelte'
+  import { startListening, stopListening } from './stores/currentContact.store'
+  import { currentRecording } from './stores/recorder.store'
+  import { user } from './stores/user.store'
 
   export let url = ''
   export let loading = false
@@ -23,12 +26,19 @@
     navigateTo(url)
   })
 
+  $: if ($currentRecording && $currentRecording.mediaRecorder.state === 'recording') {
+    stopListening()
+  } else if ($user) {
+    startListening()
+  }
+
   onMount(async () => {
     loading = true
     console.log('URL:', url)
     if (!url.startsWith('/login')) {
       try {
         await initAuth()
+        startListening()
       } catch (error) {
         console.log('Auth fehlgeschlagen. Redirect to login page')
         // Redirect to login page
