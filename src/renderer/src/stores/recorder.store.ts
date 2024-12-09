@@ -54,6 +54,7 @@ export async function startRecording(settings: RecordingSettings): Promise<void>
 
   currentRecording.set({
     id: id,
+    name: settings.name,
     fileUrl: fileUrl,
     mediaRecorder: mediaRecorder,
     audioContext: audioContext,
@@ -68,6 +69,7 @@ export function stopRecording(currentRecording: CurrentRecording): void {
   if (!currentRecording.mediaRecorder) return
   currentRecording.mediaRecorder.stop()
   addRecording({
+    name: currentRecording.name,
     id: currentRecording.id,
     size: currentRecording.size,
     length: currentRecording.length,
