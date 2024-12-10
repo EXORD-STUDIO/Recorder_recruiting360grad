@@ -1,10 +1,9 @@
 {
   "name": "recorder-recruiting360grad",
   "version": "0.0.1",
-  "description": "An Electron application with Svelte and TypeScript",
+  "description": "An Electron application to record and upload phonecalls to recruiting360grad",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "exord.de",
   "scripts": {
     "format": "prettier --plugin prettier-plugin-svelte --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",

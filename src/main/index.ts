@@ -11,11 +11,8 @@ if (process.defaultApp) {
   if (process.argv.length >= 2) {
     app.setAsDefaultProtocolClient('recorder', process.execPath, [path.resolve(process.argv[1])])
   }
-
-  console.log('Running as default app')
 } else {
   app.setAsDefaultProtocolClient('recorder')
-  console.log('Running as application')
 }
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -42,7 +39,7 @@ function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 420,
-    height: 580,
+    height: 600,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -129,8 +126,6 @@ app.whenReady().then(() => {
   })
 
   createWindow()
-
-  mainWindow?.webContents.openDevTools()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
