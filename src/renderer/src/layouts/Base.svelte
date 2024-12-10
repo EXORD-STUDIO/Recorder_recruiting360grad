@@ -111,7 +111,26 @@
       </button>
     {/each}
   </div>
-  <div class="overflow-y-auto overflow-x-hidden h-full">
+  <div class="scroll-overlay overflow-x-hidden h-full">
     <slot></slot>
   </div>
 </div>
+
+<style>
+  .scroll-overlay::-webkit-scrollbar {
+    width: 7px;
+  }
+  .scroll-overlay::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10rem;
+    border: 1px solid #fff;
+  }
+
+  .scroll-overlay::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+  }
+
+  .scroll-overlay::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+  }
+</style>
