@@ -12,8 +12,8 @@ export enum Collections {
 	Otps = "_otps",
 	Superusers = "_superusers",
 	Contacts = "contacts",
-	Documents = "documents",
 	EmailTemplates = "emailTemplates",
+	Files = "files",
 	Geodata = "geodata",
 	HistoryItems = "historyItems",
 	Insurances = "insurances",
@@ -137,7 +137,8 @@ export type ContactsRecord<Tcustom_fields = unknown> = {
 	employed_since?: IsoDateString
 	fav_reg_no?: string
 	first_name?: string
-	gdpr_agreement?: boolean
+	gdpr_agreed_at?: IsoDateString
+	gdpr_informed_at?: IsoDateString
 	id: string
 	ihk_city?: string
 	ihk_name?: string
@@ -205,7 +206,19 @@ export type ContactsRecord<Tcustom_fields = unknown> = {
 	year_of_birth?: number
 }
 
-export type DocumentsRecord = {
+export type EmailTemplatesRecord = {
+	body?: string
+	created?: IsoDateString
+	deleted_at?: IsoDateString
+	files?: string[]
+	id: string
+	name?: string
+	subject?: string
+	teamId?: RecordIdString
+	updated?: IsoDateString
+}
+
+export type FilesRecord = {
 	comment?: string
 	contact?: RecordIdString
 	created?: IsoDateString
@@ -217,18 +230,6 @@ export type DocumentsRecord = {
 	team?: RecordIdString
 	title?: string
 	type?: string
-	updated?: IsoDateString
-}
-
-export type EmailTemplatesRecord = {
-	body?: string
-	created?: IsoDateString
-	deleted_at?: IsoDateString
-	files?: string[]
-	id: string
-	name?: string
-	subject?: string
-	teamId?: RecordIdString
 	updated?: IsoDateString
 }
 
@@ -616,8 +617,8 @@ export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemF
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
 export type ContactsResponse<Tcustom_fields = unknown, Texpand = unknown> = Required<ContactsRecord<Tcustom_fields>> & BaseSystemFields<Texpand>
-export type DocumentsResponse<Texpand = unknown> = Required<DocumentsRecord> & BaseSystemFields<Texpand>
 export type EmailTemplatesResponse<Texpand = unknown> = Required<EmailTemplatesRecord> & BaseSystemFields<Texpand>
+export type FilesResponse<Texpand = unknown> = Required<FilesRecord> & BaseSystemFields<Texpand>
 export type GeodataResponse<Texpand = unknown> = Required<GeodataRecord> & BaseSystemFields<Texpand>
 export type HistoryItemsResponse<Texpand = unknown> = Required<HistoryItemsRecord> & BaseSystemFields<Texpand>
 export type InsurancesResponse<Texpand = unknown> = Required<InsurancesRecord> & BaseSystemFields<Texpand>
@@ -650,8 +651,8 @@ export type CollectionRecords = {
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
 	contacts: ContactsRecord
-	documents: DocumentsRecord
 	emailTemplates: EmailTemplatesRecord
+	files: FilesRecord
 	geodata: GeodataRecord
 	historyItems: HistoryItemsRecord
 	insurances: InsurancesRecord
@@ -683,8 +684,8 @@ export type CollectionResponses = {
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
 	contacts: ContactsResponse
-	documents: DocumentsResponse
 	emailTemplates: EmailTemplatesResponse
+	files: FilesResponse
 	geodata: GeodataResponse
 	historyItems: HistoryItemsResponse
 	insurances: InsurancesResponse
@@ -719,8 +720,8 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: '_otps'): RecordService<OtpsResponse>
 	collection(idOrName: '_superusers'): RecordService<SuperusersResponse>
 	collection(idOrName: 'contacts'): RecordService<ContactsResponse>
-	collection(idOrName: 'documents'): RecordService<DocumentsResponse>
 	collection(idOrName: 'emailTemplates'): RecordService<EmailTemplatesResponse>
+	collection(idOrName: 'files'): RecordService<FilesResponse>
 	collection(idOrName: 'geodata'): RecordService<GeodataResponse>
 	collection(idOrName: 'historyItems'): RecordService<HistoryItemsResponse>
 	collection(idOrName: 'insurances'): RecordService<InsurancesResponse>

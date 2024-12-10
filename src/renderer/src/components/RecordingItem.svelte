@@ -46,7 +46,7 @@
     formData.append('created', new Date(recording.createdAt).toISOString())
 
     try {
-      await pb.collection(Collections.Documents).create(formData)
+      await pb.collection(Collections.Files).create(formData)
 
       recording.uploaded = true
       updateRecording(recording)
