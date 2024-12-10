@@ -12,6 +12,10 @@
   let possibleMics = []
   let name = 'DSGVO'
 
+  let errorMessage = ''
+  let micAccess = true
+  let screenAccess = true
+
   async function getMics(): Promise<void> {
     possibleMics = await navigator.mediaDevices.enumerateDevices().then((devices) => {
       console.log(devices)
@@ -25,7 +29,41 @@
         })
     })
   }
+
+  function checkAccess(): boolean {
+    // Check access to microphone
+    if (!navigator.mediaDevices.getUserMedia) {
+      console.error('getUserMedia not supported')
+      micAccess = false
+    }
+
+    // Check access to screen
+    if (!navigator.mediaDevices.getDisplayMedia) {
+      console.error('getDisplayMedia not supported')
+      screenAccess = false
+    }
+
+    return micAccess && screenAccess && possibleMics.length > 0
+  }
+
+  async function record(): Promise<void> {
+    if (!checkAccess()) {
+      return
+    }
+    try {
+      await startRecording({
+        name: name,
+        micId: micId,
+        contact: $currentContact
+      })
+      errorMessage = ''
+    } catch (error) {
+      errorMessage = error.message
+    }
+  }
+
   onMount(() => {
+    checkAccess()
     getMics()
   })
 </script>
@@ -34,6 +72,29 @@
   <div class="h-full">
     {#if !$currentRecording}
       <div class="p-3 flex flex-col gap-5">
+        {#if errorMessage}
+          <div class="bg-red-100 p-2 rounded-md">
+            <p class="text-sm text-red-800">Es gab einen Fehler!</p>
+            <p class="text-xs text-red-800 opacity-50">Fehlercode: {errorMessage}</p>
+          </div>
+        {/if}
+        {#if !micAccess}
+          <div class="bg-red-100 p-2 rounded-md">
+            <p class="text-sm text-red-800">Kein Zugriff auf ein Mikrofon.</p>
+          </div>
+        {/if}
+        {#if !screenAccess}
+          <div class="bg-red-100 p-2 rounded-md">
+            <p class="text-sm text-red-800">Kein Zugriff auf den Bildschirm-Ton.</p>
+          </div>
+        {/if}
+        {#if possibleMics.length === 0}
+          <div class="bg-red-100 p-2 rounded-md">
+            <p class="text-sm text-red-800">
+              Kein Mikrofon gefunden. Bitte schließen Sie ein Mikrofon an
+            </p>
+          </div>
+        {/if}
         <InputSelect
           bind:value={micId}
           options={possibleMics}
@@ -70,15 +131,7 @@
             name = checked ? 'DSGVO' : ''
           }}
         />
-        <button
-          class="btn btn-primary"
-          on:click={() =>
-            startRecording({
-              name: name,
-              micId: micId,
-              contact: $currentContact
-            })}>Start Recording</button
-        >
+        <button class="btn btn-primary" on:click={record}>Aufnahme starten</button>
       </div>
     {:else if $currentRecording}
       <div class="p-3 flex flex-col gap-5 h-full w-full justify-center items-center">
