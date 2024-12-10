@@ -6,6 +6,7 @@ declare global {
     api: {
       startRecording: (id: string) => Promise<string>
       readFile: (uri: string) => Promise<ArrayBuffer>
+      getVersion: () => Promise<string>
     }
   }
 }

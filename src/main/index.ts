@@ -72,7 +72,7 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -89,6 +89,10 @@ app.whenReady().then(() => {
       // Grant access to capture desktop and microphone audio
       callback({ enableLocalEcho: true, audio: 'loopback', video: sources[0] })
     })
+  })
+
+  ipcMain.handle('get:version', () => {
+    return app.getVersion()
   })
 
   ipcMain.handle('read-file', async (_, uri) => {
@@ -134,7 +138,8 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  getAutoUpdater().checkForUpdatesAndNotify()
+  const result = await getAutoUpdater().checkForUpdatesAndNotify()
+  console.log(result)
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
