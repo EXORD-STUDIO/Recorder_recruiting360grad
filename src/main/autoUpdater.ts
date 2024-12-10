@@ -4,6 +4,6 @@ export function getAutoUpdater(): AppUpdater {
   // Using destructuring to access autoUpdater due to the CommonJS module of 'electron-updater'.
   // It is a workaround for ESM compatibility issues, see https://github.com/electron-userland/electron-builder/issues/7976.
   const { autoUpdater } = electronUpdater
-  autoUpdater.forceDevUpdateConfig = true
+  autoUpdater.autoInstallOnAppQuit = true
   return autoUpdater
 }
