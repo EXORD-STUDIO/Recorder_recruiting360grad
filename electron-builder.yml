@@ -36,6 +36,3 @@ dmg:
 appImage:
   artifactName: ${name}-${version}.${arch}.${ext}
 npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates
