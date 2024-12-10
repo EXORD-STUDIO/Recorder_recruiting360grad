@@ -1,6 +1,6 @@
 {
   "name": "recorder-recruiting360grad",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "An Electron application to record and upload phonecalls to recruiting360grad",
   "main": "./out/main/index.js",
   "author": "exord.de",
