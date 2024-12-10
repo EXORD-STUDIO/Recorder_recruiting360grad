@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Router, Route } from 'svelte-routing'
   import Home from './pages/Home.svelte'
   import Login from './pages/Login.svelte'
   import { initAuth } from './auth/pocketbase'
@@ -11,6 +10,7 @@
   import { startListening, stopListening } from './stores/currentContact.store'
   import { currentRecording } from './stores/recorder.store'
   import { user } from './stores/user.store'
+  import { route } from './stores/router.store'
 
   export let url = ''
   export let loading = false
@@ -18,6 +18,8 @@
   const basepath = /^\/?[a-zA-Z]+:/.test(window.location.pathname)
     ? window.location.pathname.substring(0, window.location.pathname.indexOf(':') + 1)
     : '/'
+
+  console.log('Basepath:', basepath)
 
   window.electron.ipcRenderer.on('deeplink', (_, deeplink: string) => {
     const indexof = deeplink.indexOf('://')
@@ -30,6 +32,13 @@
     stopListening()
   } else if ($user) {
     startListening()
+  }
+
+  function getURLParams(keyUrl: string, url: string, key: string): string {
+    const keyParams = keyUrl.split('/')
+    const params = url.split('/')
+    const index = keyParams.indexOf(key)
+    return decodeURIComponent(params[index])
   }
 
   onMount(async () => {
@@ -49,19 +58,23 @@
   })
 </script>
 
-<Router bind:url {basepath}>
+<div>
   {#if loading}
     <Loading />
   {:else}
     <div class="w-screen h-screen">
-      <Route path="/" component={Home} />
-      <Route path="/recordings" component={Recordings} />
-      <Route path="/login">
+      {#if $route === '/'}
+        <Home />
+      {:else if $route === '/recordings'}
+        <Recordings />
+      {:else if $route === '/login'}
         <Login />
-      </Route>
-      <Route path="/login/set-token/:url/:token" let:params>
-        <SetToken url={params.url} token={params.token} />
-      </Route>
+      {:else if $route.startsWith('/login/set-token')}
+        <SetToken
+          url={getURLParams('/login/set-token/:url/:token', $route, ':url')}
+          token={getURLParams('/login/set-token/:url/:token', $route, ':token')}
+        />
+      {/if}
     </div>
   {/if}
-</Router>
+</div>

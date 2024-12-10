@@ -1,5 +1,5 @@
-import { navigate } from 'svelte-routing'
 import { checkAuth } from '../auth/pocketbase'
+import { route } from '../stores/router.store'
 
 export function navigateTo(path: string): void {
   // If no first / exists, add it
@@ -7,8 +7,8 @@ export function navigateTo(path: string): void {
 
   if (path.startsWith('/login') || checkAuth()) {
     console.log('Navigating to', path)
-    navigate(path)
+    route.set(path)
   } else {
-    navigate('/login')
+    route.set('/login')
   }
 }
