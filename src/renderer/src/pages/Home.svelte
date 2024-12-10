@@ -9,7 +9,7 @@
   import { getContactName } from '../utils/formatters'
 
   let micId = 'default'
-  let possibleMics = []
+  let possibleMics = null
   let name = 'DSGVO'
 
   let errorMessage = ''
@@ -18,6 +18,9 @@
 
   async function getMics(): Promise<void> {
     possibleMics = await navigator.mediaDevices.enumerateDevices().then((devices) => {
+      if (!devices) {
+        return []
+      }
       console.log(devices)
       return devices
         .filter((device) => device.kind === 'audioinput')
@@ -43,7 +46,7 @@
       screenAccess = false
     }
 
-    return micAccess && screenAccess && possibleMics.length > 0
+    return micAccess && screenAccess && possibleMics?.length > 0
   }
 
   async function record(): Promise<void> {
@@ -88,7 +91,7 @@
             <p class="text-sm text-red-800">Kein Zugriff auf den Bildschirm-Ton.</p>
           </div>
         {/if}
-        {#if possibleMics.length === 0}
+        {#if possibleMics && possibleMics.length === 0}
           <div class="bg-red-100 p-2 rounded-md">
             <p class="text-sm text-red-800">
               Kein Mikrofon gefunden. Bitte schließen Sie ein Mikrofon an
@@ -97,7 +100,7 @@
         {/if}
         <InputSelect
           bind:value={micId}
-          options={possibleMics}
+          options={possibleMics || []}
           label="Mikrofon"
           placeholder="Select a microphone"
           onSelect={(value) => {
@@ -117,8 +120,17 @@
                 <span class="text-sm text-gray-500">{$currentContact.reg_no}</span>
               </div>
             </div>
-            <p class="mt-2 text-sm text-gray-500" id="email-description">
+            <p class="mt-2 text-sm text-gray-500">
               Um einen anderen Kontakt auszuwählen, öffnen Sie ihn in der Web-App.
+            </p>
+          </div>
+        {:else}
+          <div class="bg-brand-100 p-2 rounded-md">
+            <div class="block text-sm font-medium leading-6 text-gray-900 mb-2">
+              Ausgewählter Kontakt
+            </div>
+            <p class="mt-2 text-sm text-gray-500">
+              Kein Kontakt ausgewählt. Um einen Kontakt auszuwählen, öffnen Sie ihn in der Web-App.
             </p>
           </div>
         {/if}
