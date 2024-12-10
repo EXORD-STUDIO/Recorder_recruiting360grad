@@ -36,3 +36,5 @@ dmg:
 appImage:
   artifactName: ${name}-${version}.${arch}.${ext}
 npmRebuild: false
+publish:
+  provider: github
