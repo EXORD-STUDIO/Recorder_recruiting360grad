@@ -1,5 +1,5 @@
 appId: de.exord.360grad.recorder
-productName: Phone Recorder 360°
+productName: Phone Recorder 360Grad
 directories:
   buildResources: build
   output: "dist/${version}"
