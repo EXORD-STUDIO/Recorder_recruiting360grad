@@ -32,7 +32,7 @@ mac:
             - recorder
   notarize: false
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}.${arch}.${ext}
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}.${arch}.${ext}
 npmRebuild: false
