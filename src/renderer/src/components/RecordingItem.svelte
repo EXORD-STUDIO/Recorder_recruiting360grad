@@ -31,7 +31,7 @@
     })
     formData.append('files', recordingFile)
     formData.append('title', recording.name)
-    formData.append('contact', recording.contact.id)
+    formData.append('contacts', recording.contact.id)
     formData.append('creator', $user.id)
     formData.append('team', recording.contact.team)
     if (recording.name === 'DSGVO') {
