@@ -29,13 +29,12 @@
       type: 'audio/mpeg',
       lastModified: recording.createdAt
     })
-    formData.append('files', recordingFile)
-    formData.append('title', recording.name)
-    formData.append('contact', recording.contact.id)
-    formData.append('creator', $user.id)
-    formData.append('team', recording.contact.team)
+    formData.append('file', recordingFile)
+    formData.append('contacts', recording.contact.id)
+    formData.append('created_by', $user.id)
     if (recording.name === 'DSGVO') {
       formData.append('type', 'Mündliche Einwilligung nach DSGVO')
+      formData.append('is_gdpr_agreement', 'true')
     }
     const comment = {
       appVersion: window.electron.process.versions.appVersion,
